@@ -21,10 +21,10 @@ MODELS_DIR = os.path.join(BASE_DIR, 'diagnosis', 'models')
 tb_model = None
 leukemia_model = None
 
-def download_model_from_gdrive():
+def download_models():
     """Download models from Google Drive if not present locally"""
     try:
-        from .gdrive_models import download_models
+        from .working_models import download_models
         download_models()
         return True
     except Exception as e:
@@ -35,7 +35,7 @@ try:
     from tensorflow.keras.models import load_model
     
     # Try to download models from Google Drive first
-    download_model_from_gdrive()
+    download_models()
     
     # Try to load TB model
     tb_model_path = os.path.join(MODELS_DIR, 'medical_tb_detector.h5')
