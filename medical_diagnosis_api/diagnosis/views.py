@@ -14,48 +14,48 @@ import io
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Try to load models, download from Google Drive if missing
+# Load models from Hugging Face
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MODELS_DIR = os.path.join(BASE_DIR, 'diagnosis', 'models')
 
 tb_model = None
 leukemia_model = None
 
-def download_models():
-    """Download models from Google Drive if not present locally"""
+def download_models_from_huggingface():
+    """Download models from Hugging Face if not present locally"""
     try:
         from .working_models import download_models
         download_models()
         return True
     except Exception as e:
-        logger.error(f"Failed to download models from Google Drive: {str(e)}")
+        logger.error(f"Failed to download models from Hugging Face: {str(e)}")
         return False
 
 try:
     from tensorflow.keras.models import load_model
     
-    # Try to download models from Google Drive first
-    download_models()
+    # Try to download models from Hugging Face first
+    download_models_from_huggingface()
     
     # Try to load TB model
     tb_model_path = os.path.join(MODELS_DIR, 'medical_tb_detector.h5')
     if os.path.exists(tb_model_path):
         tb_model = load_model(tb_model_path)
-        logger.info("TB model loaded successfully")
+        logger.info("TB model loaded successfully from Hugging Face")
     else:
-        logger.warning("TB model not available")
+        logger.warning("TB model not available - downloading from Hugging Face...")
         
     # Try to load Leukemia model
     leukemia_model_path = os.path.join(MODELS_DIR, 'best_precision_model_phase1.h5')
     if os.path.exists(leukemia_model_path):
         leukemia_model = load_model(leukemia_model_path)
-        logger.info("Leukemia model loaded successfully")
+        logger.info("Leukemia model loaded successfully from Hugging Face")
     else:
-        logger.warning("Leukemia model not available")
+        logger.warning("Leukemia model not available - downloading from Hugging Face...")
         
 except Exception as e:
     logger.error(f"Could not load ML models: {e}")
-    logger.info("Models will be downloaded from Google Drive on first use")
+    logger.info("Models will be downloaded from Hugging Face on first use")
 
 # Configuration constants
 MAX_FILE_SIZE = 10 * 1024 * 1024  # 10MB
@@ -207,9 +207,9 @@ def tb_detection(request):
         return Response(
             {
                 "error": "TB detection service temporarily unavailable",
-                "message": "ML models are being loaded. Please try again in a few minutes.",
-                "status": "models_not_loaded",
-                "instructions": "Upload the ML model files to the server to enable this functionality"
+                "message": "ML models are being downloaded from Hugging Face. Please try again in a few minutes.",
+                "status": "models_downloading",
+                "instructions": "Models are being downloaded from Hugging Face repository"
             }, 
             status=status.HTTP_503_SERVICE_UNAVAILABLE
         )
@@ -219,7 +219,7 @@ def tb_detection(request):
             {
                 "error": "No image file provided",
                 "message": "Please upload a chest X-ray image",
-                "accepted_formats": ["JPEG", "PNG"],
+                "accepted_formats": ["Any image format"],
                 "max_size": "10MB"
             }, 
             status=status.HTTP_400_BAD_REQUEST
@@ -319,9 +319,9 @@ def leukemia_detection(request):
         return Response(
             {
                 "error": "Leukemia detection service temporarily unavailable",
-                "message": "ML models are being loaded. Please try again in a few minutes.",
-                "status": "models_not_loaded",
-                "instructions": "Upload the ML model files to the server to enable this functionality"
+                "message": "ML models are being downloaded from Hugging Face. Please try again in a few minutes.",
+                "status": "models_downloading",
+                "instructions": "Models are being downloaded from Hugging Face repository"
             }, 
             status=status.HTTP_503_SERVICE_UNAVAILABLE
         )
@@ -331,7 +331,7 @@ def leukemia_detection(request):
             {
                 "error": "No image file provided",
                 "message": "Please upload a blood smear microscopy image",
-                "accepted_formats": ["JPEG", "PNG"],
+                "accepted_formats": ["Any image format"],
                 "max_size": "10MB"
             }, 
             status=status.HTTP_400_BAD_REQUEST
@@ -417,9 +417,10 @@ def health_check(request):
         "tb_model_loaded": tb_model is not None,
         "leukemia_model_loaded": leukemia_model is not None,
         "models_status": {
-            "tb_model": "loaded" if tb_model is not None else "missing - upload medical_tb_detector.h5",
-            "leukemia_model": "loaded" if leukemia_model is not None else "missing - upload best_precision_model_phase1.h5"
-        }
+            "tb_model": "loaded" if tb_model is not None else "downloading from Hugging Face - medical_tb_detector.h5",
+            "leukemia_model": "loaded" if leukemia_model is not None else "downloading from Hugging Face - best_precision_model_phase1.h5"
+        },
+        "model_source": "Hugging Face Repository: https://huggingface.co/Noblhyon/medical-diagnosis-models"
     })
 
 def index_view(request):
