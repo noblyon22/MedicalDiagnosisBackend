@@ -1,0 +1,9 @@
+{
+  "build": {
+    "builder": "NIXPACKS"
+  },
+  "deploy": {
+    "startCommand": "cd medical_diagnosis_api && python manage.py migrate && python manage.py runserver 0.0.0.0:$PORT",
+    "healthcheckPath": "/api/health/"
+  }
+}

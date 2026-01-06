@@ -1,0 +1,6 @@
+# Clean .gitignore 
+*.h5 
+venv/ 
+__pycache__/ 
+*.pyc 
+.env 

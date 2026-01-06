@@ -1,0 +1,12 @@
+INFO 2025-12-24 00:20:47,153 views 15004 18276 Leukemia detection request from IP: 127.0.0.1
+INFO 2025-12-24 00:20:49,512 views 15004 19572 Leukemia detection request from IP: 127.0.0.1
+INFO 2026-01-01 00:02:37,416 views 6356 2876 Leukemia detection request from IP: 127.0.0.1
+INFO 2026-01-01 00:04:04,776 views 6356 2876 Leukemia prediction completed - Risk: Moderate, Confidence: 0.816
+INFO 2026-01-01 00:05:48,673 views 6356 2876 TB detection request from IP: 127.0.0.1
+INFO 2026-01-01 00:08:14,853 views 6356 2876 TB prediction completed - Risk: High, Confidence: 0.973
+INFO 2026-01-01 00:11:18,234 views 6356 2308 Leukemia detection request from IP: 127.0.0.1
+INFO 2026-01-01 00:11:23,901 views 6356 2308 Leukemia prediction completed - Risk: Moderate, Confidence: 0.717
+INFO 2026-01-01 00:14:23,051 views 6356 16340 Leukemia detection request from IP: 127.0.0.1
+INFO 2026-01-01 00:14:29,187 views 6356 16340 Leukemia prediction completed - Risk: Low, Confidence: 0.662
+INFO 2026-01-01 00:19:23,483 views 6356 16944 TB detection request from IP: 127.0.0.1
+INFO 2026-01-01 00:19:37,180 views 6356 16944 TB prediction completed - Risk: Low, Confidence: 0.269
